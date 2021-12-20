@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_server
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test_stock
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: Asia/Tokyo
+    command:
+      [
+        --character-set-server=utf8mb4,
+        --collation-server=utf8mb4_unicode_ci,
+        --default-authentication-plugin=mysql_native_password,
+      ]
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./data/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - 3306:3306
+  dynamodb:
+    image: amazon/dynamodb-local
+    ports:
+      - 8000:8000

@@ -1,0 +1,7 @@
+[workspace]
+members = [
+	"stock-metrics-driver",
+	"stock-metrics-adapter",
+	"stock-metrics-app",
+	"stock-metrics-kernel"
+]
