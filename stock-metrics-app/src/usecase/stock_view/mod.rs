@@ -1,8 +1,7 @@
 use derive_new::new;
-use stock_metrics_kernel::{
-    model::stock::{Stock, StockId},
-    repository::stock::StockRepository,
-};
+use stock_metrics_kernel::{model::stock::StockId, repository::stock::StockRepository};
+
+use crate::model::stock_view::StockView;
 
 #[derive(new)]
 // TODO あとで型パラメータを変える
@@ -11,8 +10,11 @@ pub struct StockViewUseCase<R: StockRepository> {
 }
 
 impl<R: StockRepository> StockViewUseCase<R> {
-    pub async fn show_specific_stock(&self, id: String) -> anyhow::Result<Stock> {
-        self.repository.find(StockId(id)).await
+    pub async fn show_specific_stock(&self, id: String) -> anyhow::Result<StockView> {
+        self.repository
+            .find(StockId(id))
+            .await
+            .map(|stock| stock.into())
     }
 }
 
