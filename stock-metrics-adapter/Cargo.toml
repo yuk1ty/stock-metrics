@@ -7,8 +7,9 @@ edition = "2021"
 
 [dependencies]
 stock-metrics-kernel = { path = "../stock-metrics-kernel" }
-sqlx = { version = "0.5", features = ["runtime-tokio-rustls", "mysql"] }
+sqlx = { version = "0.5", features = ["runtime-tokio-rustls", "mysql", "chrono"] }
 anyhow = "1.0.44"
 once_cell = "1.8.0"
 tokio = { version = "1.12.0", features = ["rt", "macros", "test-util"] }
 async-trait = "0.1.51"
+chrono = "0.4.19"

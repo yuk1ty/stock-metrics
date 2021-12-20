@@ -47,6 +47,7 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
 
 #[cfg(test)]
 mod test {
+    use chrono::Local;
     use stock_metrics_kernel::model::stock::{
         market_kind::MarketKind, ticker_symbol::TickerSymbol, Stock, StockId,
     };
@@ -66,6 +67,8 @@ mod test {
                 "NIKKEI225".to_string(),
                 TickerSymbol("NIKKEI225".to_string()),
                 MarketKind::try_from("TSE".to_string()).unwrap(),
+                Local::now(),
+                Local::now(),
             ))
             .await
             .unwrap();
