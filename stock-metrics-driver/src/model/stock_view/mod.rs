@@ -1,7 +1,7 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use stock_metrics_app::model::stock_view::StockView;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize)]
 pub struct JsonStockView {
     id: String,
     name: String,

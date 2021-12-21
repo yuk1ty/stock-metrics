@@ -10,11 +10,11 @@ pub struct StockViewUseCase<R: StockRepository> {
 }
 
 impl<R: StockRepository> StockViewUseCase<R> {
-    pub async fn show_specific_stock(&self, id: String) -> anyhow::Result<StockView> {
+    pub async fn show_specific_stock(&self, id: String) -> anyhow::Result<Option<StockView>> {
         self.repository
             .find(StockId(id))
             .await
-            .map(|stock| stock.into())
+            .map(|stock| stock.map(|s| s.into()))
     }
 }
 

@@ -1,4 +1,7 @@
-use crate::{module::Modules, routes::stock_view::stock_view};
+use crate::{
+    module::Modules,
+    routes::stock_view::{create_stock, stock_view},
+};
 use axum::{handler::get, AddExtensionLayer, Router};
 use derive_new::new;
 use std::{net::SocketAddr, sync::Arc};
@@ -11,8 +14,7 @@ pub struct Server {
 impl Server {
     pub async fn startup(self) {
         let app = Router::new()
-            .route("/stocks", get(stock_view))
-            // .route("/stocks", get(stock_view))
+            .route("/stocks", get(stock_view).post(create_stock))
             .layer(AddExtensionLayer::new(self.modules));
 
         let addr = SocketAddr::from(([127, 0, 0, 1], 8080));

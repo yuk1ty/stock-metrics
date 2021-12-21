@@ -19,14 +19,20 @@ impl<'a> StockRepositoryImpl<'a> {
 
 #[async_trait]
 impl<'a> StockRepository for StockRepositoryImpl<'a> {
-    async fn find(&self, id: StockId) -> anyhow::Result<Stock> {
+    async fn find(&self, id: StockId) -> anyhow::Result<Option<Stock>> {
         let pool = self.pool.0.clone();
         let stock_table = query_as::<_, StockTable>("select * from stock where id = ?")
             .bind(id.0)
             .fetch_one(&*pool)
-            .await?;
-        let stock = StockTable::try_into(stock_table)?;
-        Ok(stock)
+            .await
+            .ok();
+        match stock_table {
+            Some(st) => {
+                let s = StockTable::try_into(st)?;
+                Ok(Some(s))
+            }
+            None => Ok(None),
+        }
     }
 
     async fn insert(&self, source: Stock) -> anyhow::Result<()> {
@@ -72,7 +78,11 @@ mod test {
             ))
             .await
             .unwrap();
-        let found = repository.find(StockId("bcd".to_string())).await.unwrap();
+        let found = repository
+            .find(StockId("bcd".to_string()))
+            .await
+            .unwrap()
+            .unwrap();
         assert_eq!(found.id.0, "bcd".to_string());
     }
 }
