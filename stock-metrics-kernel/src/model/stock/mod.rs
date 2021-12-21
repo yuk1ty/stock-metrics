@@ -1,15 +1,16 @@
 use chrono::{DateTime, Local};
 use derive_new::new;
-use uuid::Uuid;
 
 use self::{market_kind::MarketKind, ticker_symbol::TickerSymbol};
+
+use super::Id;
 
 pub mod market_kind;
 pub mod ticker_symbol;
 
 #[derive(new)]
 pub struct Stock {
-    pub id: StockId,
+    pub id: Id<Stock>,
     pub name: String,
     pub ticker_symbol: TickerSymbol,
     pub market_kind: MarketKind,
@@ -17,19 +18,9 @@ pub struct Stock {
     pub updated_at: DateTime<Local>,
 }
 
-#[derive(PartialEq)]
-pub struct StockId(pub String);
-
-impl StockId {
-    pub fn gen() -> StockId {
-        let id = Uuid::new_v4().to_string();
-        StockId(id)
-    }
-}
-
 #[derive(new)]
 pub struct NewStock {
-    pub id: StockId,
+    pub id: Id<Stock>,
     pub name: String,
     pub ticker_symbol: TickerSymbol,
     pub market_kind: MarketKind,

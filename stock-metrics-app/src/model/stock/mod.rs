@@ -1,6 +1,7 @@
 use derive_new::new;
-use stock_metrics_kernel::model::stock::{
-    market_kind::MarketKind, ticker_symbol::TickerSymbol, NewStock, StockId,
+use stock_metrics_kernel::model::{
+    stock::{market_kind::MarketKind, ticker_symbol::TickerSymbol, NewStock},
+    Id,
 };
 
 #[derive(new)]
@@ -14,7 +15,7 @@ impl TryFrom<CreateStock> for NewStock {
     type Error = anyhow::Error;
 
     fn try_from(c: CreateStock) -> anyhow::Result<Self> {
-        let stock_id = StockId::gen();
+        let stock_id = Id::gen();
         Ok(NewStock::new(
             stock_id,
             c.name,

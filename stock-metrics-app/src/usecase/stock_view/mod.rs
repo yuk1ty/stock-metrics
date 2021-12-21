@@ -1,5 +1,5 @@
 use derive_new::new;
-use stock_metrics_kernel::{model::stock::StockId, repository::stock::StockRepository};
+use stock_metrics_kernel::repository::stock::StockRepository;
 
 use crate::model::stock_view::StockView;
 
@@ -12,7 +12,7 @@ pub struct StockViewUseCase<R: StockRepository> {
 impl<R: StockRepository> StockViewUseCase<R> {
     pub async fn show_specific_stock(&self, id: String) -> anyhow::Result<Option<StockView>> {
         self.repository
-            .find(StockId(id))
+            .find(id.try_into()?)
             .await
             .map(|stock| stock.map(|s| s.into()))
     }

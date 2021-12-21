@@ -1,7 +1,10 @@
 use async_trait::async_trait;
 use sqlx::query_as;
 use stock_metrics_kernel::{
-    model::stock::{NewStock, Stock, StockId},
+    model::{
+        stock::{NewStock, Stock},
+        Id,
+    },
     repository::stock::StockRepository,
 };
 
@@ -19,18 +22,15 @@ impl<'a> StockRepositoryImpl<'a> {
 
 #[async_trait]
 impl<'a> StockRepository for StockRepositoryImpl<'a> {
-    async fn find(&self, id: StockId) -> anyhow::Result<Option<Stock>> {
+    async fn find(&self, id: Id<Stock>) -> anyhow::Result<Option<Stock>> {
         let pool = self.pool.0.clone();
         let stock_table = query_as::<_, StockTable>("select * from stock where id = ?")
-            .bind(id.0)
+            .bind(id.value.to_string())
             .fetch_one(&*pool)
             .await
             .ok();
         match stock_table {
-            Some(st) => {
-                let s = st.try_into()?;
-                Ok(Some(s))
-            }
+            Some(st) => Ok(Some(st.try_into()?)),
             None => Ok(None),
         }
     }
@@ -57,9 +57,11 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
 mod test {
     use stock_metrics_kernel::model::stock::NewStock;
     use stock_metrics_kernel::model::stock::{
-        market_kind::MarketKind, ticker_symbol::TickerSymbol, StockId,
+        market_kind::MarketKind, ticker_symbol::TickerSymbol,
     };
+    use stock_metrics_kernel::model::Id;
     use stock_metrics_kernel::repository::stock::StockRepository;
+    use ulid::Ulid;
 
     use crate::persistence::mysql::Db;
 
@@ -69,20 +71,17 @@ mod test {
     async fn test_insert_stock() {
         let db = Db::new().await;
         let repository = StockRepositoryImpl { pool: &db };
+        let id = Ulid::new();
         let _ = repository
             .insert(NewStock::new(
-                StockId("bcd".to_string()),
+                Id::new(id),
                 "NIKKEI225".to_string(),
                 TickerSymbol("NIKKEI225".to_string()),
                 MarketKind::try_from("TSE".to_string()).unwrap(),
             ))
             .await
             .unwrap();
-        let found = repository
-            .find(StockId("bcd".to_string()))
-            .await
-            .unwrap()
-            .unwrap();
-        assert_eq!(found.id.0, "bcd".to_string());
+        let found = repository.find(Id::new(id)).await.unwrap().unwrap();
+        assert_eq!(found.id.value, id);
     }
 }

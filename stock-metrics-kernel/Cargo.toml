@@ -11,3 +11,4 @@ derive-new = "0.5.9"
 anyhow = "1.0.44"
 async-trait = "0.1.51"
 uuid = { verison = "0.8.2", features = ["v4"] }
+ulid = "0.4.1"
