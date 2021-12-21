@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use sqlx::query_as;
 use stock_metrics_kernel::{
-    model::stock::{Stock, StockId},
+    model::stock::{NewStock, Stock, StockId},
     repository::stock::StockRepository,
 };
 
@@ -35,9 +35,9 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
         }
     }
 
-    async fn insert(&self, source: Stock) -> anyhow::Result<()> {
+    async fn insert(&self, source: NewStock) -> anyhow::Result<()> {
         let pool = self.pool.0.clone();
-        let stock_table: StockTable = Stock::try_into(source)?;
+        let stock_table: StockTable = NewStock::try_into(source)?;
         let _ = sqlx::query(
             "insert into stock (id, name, ticker_symbol, market_kind) values (?, ?, ?, ?)",
         )
@@ -53,9 +53,9 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
 
 #[cfg(test)]
 mod test {
-    use chrono::Local;
+    use stock_metrics_kernel::model::stock::NewStock;
     use stock_metrics_kernel::model::stock::{
-        market_kind::MarketKind, ticker_symbol::TickerSymbol, Stock, StockId,
+        market_kind::MarketKind, ticker_symbol::TickerSymbol, StockId,
     };
     use stock_metrics_kernel::repository::stock::StockRepository;
 
@@ -68,13 +68,11 @@ mod test {
         let db = Db::new().await;
         let repository = StockRepositoryImpl { pool: &db };
         let _ = repository
-            .insert(Stock::new(
+            .insert(NewStock::new(
                 StockId("bcd".to_string()),
                 "NIKKEI225".to_string(),
                 TickerSymbol("NIKKEI225".to_string()),
                 MarketKind::try_from("TSE".to_string()).unwrap(),
-                Local::now(),
-                Local::now(),
             ))
             .await
             .unwrap();

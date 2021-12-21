@@ -9,7 +9,7 @@ use axum::{
 
 use crate::{
     context::validate::ValidatedRequest,
-    model::{stock::CreateStock, stock_view::JsonStockView},
+    model::{stock::JsonCreateStock, stock_view::JsonStockView},
     module::Modules,
 };
 
@@ -30,9 +30,10 @@ pub async fn stock_view(
 }
 
 pub async fn create_stock(
-    ValidatedRequest(source): ValidatedRequest<CreateStock>,
+    ValidatedRequest(source): ValidatedRequest<JsonCreateStock>,
     Extension(module): Extension<Arc<Modules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    println!("{:?}", source);
-    Ok(StatusCode::OK)
+    let res = module.stock_use_case().register_stock(source.into()).await;
+    res.map(|_| StatusCode::OK)
+        .map_err(|err| StatusCode::INTERNAL_SERVER_ERROR)
 }

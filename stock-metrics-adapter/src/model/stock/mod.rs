@@ -1,7 +1,7 @@
 use chrono::{DateTime, Local};
 use sqlx::FromRow;
 use stock_metrics_kernel::model::stock::{
-    market_kind::MarketKind, ticker_symbol::TickerSymbol, Stock, StockId,
+    market_kind::MarketKind, ticker_symbol::TickerSymbol, NewStock, Stock, StockId,
 };
 
 #[derive(FromRow)]
@@ -38,6 +38,20 @@ impl TryFrom<Stock> for StockTable {
             market_kind: s.market_kind.to_string(),
             created_at: s.created_at,
             updated_at: s.updated_at,
+        })
+    }
+}
+
+impl TryFrom<NewStock> for StockTable {
+    type Error = anyhow::Error;
+    fn try_from(s: NewStock) -> Result<Self, Self::Error> {
+        Ok(StockTable {
+            id: s.id.0,
+            name: s.name,
+            ticker_symbol: s.ticker_symbol.0,
+            market_kind: s.market_kind.to_string(),
+            created_at: Local::now(),
+            updated_at: Local::now(),
         })
     }
 }

@@ -1,0 +1,25 @@
+use derive_new::new;
+use stock_metrics_kernel::model::stock::{
+    market_kind::MarketKind, ticker_symbol::TickerSymbol, NewStock, StockId,
+};
+
+#[derive(new)]
+pub struct CreateStock {
+    pub name: String,
+    pub ticker_symbol: String,
+    pub market_kind: String,
+}
+
+impl TryFrom<CreateStock> for NewStock {
+    type Error = anyhow::Error;
+
+    fn try_from(c: CreateStock) -> anyhow::Result<Self> {
+        let stock_id = StockId::gen();
+        Ok(NewStock::new(
+            stock_id,
+            c.name,
+            TickerSymbol(c.ticker_symbol),
+            MarketKind::try_from(c.market_kind)?,
+        ))
+    }
+}

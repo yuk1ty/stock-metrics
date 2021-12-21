@@ -1,6 +1,6 @@
 use futures::executor::block_on;
 use stock_metrics_adapter::{persistence::mysql::Db, repository::stock::StockRepositoryImpl};
-use stock_metrics_app::usecase::stock_view::StockViewUseCase;
+use stock_metrics_app::usecase::{stock::StockUseCase, stock_view::StockViewUseCase};
 use stock_metrics_kernel::repository::stock::StockRepository;
 use tokio::sync::OnceCell;
 
@@ -25,6 +25,11 @@ impl Modules {
 
     pub fn stock_view_use_case(&self) -> StockViewUseCase<impl StockRepository> {
         let usecase = StockViewUseCase::new(self.stock_repository());
+        usecase
+    }
+
+    pub fn stock_use_case(&self) -> StockUseCase<impl StockRepository> {
+        let usecase = StockUseCase::new(self.stock_repository());
         usecase
     }
 }
