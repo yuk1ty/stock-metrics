@@ -28,7 +28,7 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
             .ok();
         match stock_table {
             Some(st) => {
-                let s = StockTable::try_into(st)?;
+                let s = st.try_into()?;
                 Ok(Some(s))
             }
             None => Ok(None),
@@ -37,7 +37,7 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
 
     async fn insert(&self, source: NewStock) -> anyhow::Result<()> {
         let pool = self.pool.0.clone();
-        let stock_table: StockTable = NewStock::try_into(source)?;
+        let stock_table: StockTable = source.try_into()?;
         let _ = sqlx::query(
             "insert into stock (id, name, ticker_symbol, market_kind) values (?, ?, ?, ?)",
         )
@@ -45,6 +45,8 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
         .bind(stock_table.name)
         .bind(stock_table.ticker_symbol)
         .bind(stock_table.market_kind)
+        .bind(stock_table.created_at)
+        .bind(stock_table.updated_at)
         .execute(&*pool)
         .await?;
         Ok(())
