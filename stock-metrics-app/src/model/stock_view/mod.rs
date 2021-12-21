@@ -13,7 +13,7 @@ impl From<Stock> for StockView {
             id: s.id.value.to_string(),
             name: s.name,
             ticker_symbol: s.ticker_symbol.0,
-            market_kind: s.market_kind.to_string(),
+            market_kind: s.market_kind.value.to_string(),
         }
     }
 }

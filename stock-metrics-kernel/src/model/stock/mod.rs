@@ -13,7 +13,7 @@ pub struct Stock {
     pub id: Id<Stock>,
     pub name: String,
     pub ticker_symbol: TickerSymbol,
-    pub market_kind: MarketKind,
+    pub market_kind: Id<MarketKind>,
     pub created_at: DateTime<Local>,
     pub updated_at: DateTime<Local>,
 }
@@ -23,5 +23,5 @@ pub struct NewStock {
     pub id: Id<Stock>,
     pub name: String,
     pub ticker_symbol: TickerSymbol,
-    pub market_kind: MarketKind,
+    pub market_kind: Id<MarketKind>,
 }

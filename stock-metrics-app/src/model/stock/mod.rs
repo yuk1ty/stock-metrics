@@ -1,6 +1,6 @@
 use derive_new::new;
 use stock_metrics_kernel::model::{
-    stock::{market_kind::MarketKind, ticker_symbol::TickerSymbol, NewStock},
+    stock::{ticker_symbol::TickerSymbol, NewStock},
     Id,
 };
 
@@ -20,7 +20,7 @@ impl TryFrom<CreateStock> for NewStock {
             stock_id,
             c.name,
             TickerSymbol(c.ticker_symbol),
-            MarketKind::try_from(c.market_kind)?,
+            c.market_kind.try_into()?,
         ))
     }
 }

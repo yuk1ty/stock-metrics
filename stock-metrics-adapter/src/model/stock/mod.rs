@@ -21,7 +21,7 @@ impl TryFrom<StockTable> for Stock {
             st.id.try_into()?,
             st.name,
             TickerSymbol(st.ticker_symbol),
-            MarketKind::try_from(st.market_kind)?,
+            st.market_kind.try_into()?,
             st.created_at,
             st.updated_at,
         ))
@@ -35,7 +35,7 @@ impl TryFrom<NewStock> for StockTable {
             id: s.id.value.to_string(),
             name: s.name,
             ticker_symbol: s.ticker_symbol.0,
-            market_kind: s.market_kind.to_string(),
+            market_kind: s.market_kind.value.to_string(),
             created_at: Local::now(),
             updated_at: Local::now(),
         })
