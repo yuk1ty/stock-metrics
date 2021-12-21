@@ -39,7 +39,7 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
         let pool = self.pool.0.clone();
         let stock_table: StockTable = source.try_into()?;
         let _ = sqlx::query(
-            "insert into stock (id, name, ticker_symbol, market_kind) values (?, ?, ?, ?)",
+            "insert into stock (id, name, ticker_symbol, market_kind, created_at, updated_at) values (?, ?, ?, ?, ?, ?)",
         )
         .bind(stock_table.id)
         .bind(stock_table.name)

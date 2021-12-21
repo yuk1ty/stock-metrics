@@ -5,12 +5,13 @@ use stock_metrics_kernel::repository::stock::StockRepository;
 use tokio::sync::OnceCell;
 
 // TODO module の作りがよくなくて、ここのフィールドにもたせるようにする必要がある？？
+#[derive(Debug)]
 pub struct Modules {}
 
 static DB: OnceCell<Db> = OnceCell::const_new();
 
 impl Modules {
-    fn db(&self) -> &'static Db {
+    pub(super) fn db(&self) -> &'static Db {
         // This can't capitalize on tokio's Runtime#block_on because
         // we can't launch another runtime on the existing tokio's runtime.
         // Alternatively we take advantage of futures crate's runtime.

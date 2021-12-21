@@ -6,6 +6,7 @@ use axum::{
     response::IntoResponse,
     Json,
 };
+use tracing::error;
 
 use crate::{
     context::validate::ValidatedRequest,
@@ -13,6 +14,7 @@ use crate::{
     module::Modules,
 };
 
+#[tracing::instrument(skip(modules))]
 pub async fn stock_view(
     Path(id): Path<String>,
     Extension(modules): Extension<Arc<Modules>>,
@@ -25,15 +27,21 @@ pub async fn stock_view(
                 (StatusCode::OK, Json(json))
             })
             .ok_or_else(|| StatusCode::NOT_FOUND),
-        Err(err) => Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Err(err) => {
+            error!("Unexpected error: {:?}", err);
+            Err(StatusCode::INTERNAL_SERVER_ERROR)
+        }
     }
 }
 
+#[tracing::instrument(skip(modules))]
 pub async fn create_stock(
     ValidatedRequest(source): ValidatedRequest<JsonCreateStock>,
-    Extension(module): Extension<Arc<Modules>>,
+    Extension(modules): Extension<Arc<Modules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    let res = module.stock_use_case().register_stock(source.into()).await;
-    res.map(|_| StatusCode::OK)
-        .map_err(|err| StatusCode::INTERNAL_SERVER_ERROR)
+    let res = modules.stock_use_case().register_stock(source.into()).await;
+    res.map(|_| StatusCode::OK).map_err(|err| {
+        error!("Unexpected error: {:?}", err);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })
 }
