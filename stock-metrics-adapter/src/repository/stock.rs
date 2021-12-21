@@ -55,10 +55,8 @@ impl<'a> StockRepository for StockRepositoryImpl<'a> {
 
 #[cfg(test)]
 mod test {
+    use stock_metrics_kernel::model::stock::ticker_symbol::TickerSymbol;
     use stock_metrics_kernel::model::stock::NewStock;
-    use stock_metrics_kernel::model::stock::{
-        market_kind::MarketKind, ticker_symbol::TickerSymbol,
-    };
     use stock_metrics_kernel::model::Id;
     use stock_metrics_kernel::repository::stock::StockRepository;
     use ulid::Ulid;

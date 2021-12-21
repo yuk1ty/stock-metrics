@@ -2,6 +2,7 @@ use crate::{
     module::Modules,
     routes::{
         health::{hc, hc_db},
+        market_kind::create_market_kind,
         stock_view::{create_stock, stock_view},
     },
 };
@@ -24,9 +25,12 @@ impl Server {
         let stocks_router = Router::new()
             .route("/", post(create_stock))
             .route("/:id", get(stock_view));
+        let market_kind_router = Router::new().route("/", post(create_market_kind));
+
         let app = Router::new()
             .nest("/hc", hc_router)
             .nest("/stocks", stocks_router)
+            .nest("/market_kind", market_kind_router)
             .layer(AddExtensionLayer::new(self.modules));
 
         let addr = SocketAddr::from(([127, 0, 0, 1], 8080));

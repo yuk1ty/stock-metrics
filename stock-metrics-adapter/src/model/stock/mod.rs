@@ -1,8 +1,6 @@
 use chrono::{DateTime, Local};
 use sqlx::FromRow;
-use stock_metrics_kernel::model::stock::{
-    market_kind::MarketKind, ticker_symbol::TickerSymbol, NewStock, Stock,
-};
+use stock_metrics_kernel::model::stock::{ticker_symbol::TickerSymbol, NewStock, Stock};
 
 #[derive(FromRow)]
 pub struct StockTable {

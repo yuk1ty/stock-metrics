@@ -1,11 +1,10 @@
 use chrono::{DateTime, Local};
 use derive_new::new;
 
-use self::{market_kind::MarketKind, ticker_symbol::TickerSymbol};
+use self::ticker_symbol::TickerSymbol;
 
-use super::Id;
+use super::{market_kind::MarketKind, Id};
 
-pub mod market_kind;
 pub mod ticker_symbol;
 
 #[derive(new)]

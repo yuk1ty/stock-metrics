@@ -15,3 +15,10 @@ pub struct MarketKind {
     pub created_at: DateTime<Local>,
     pub updated_at: DateTime<Local>,
 }
+
+#[derive(new)]
+pub struct NewMarketKind {
+    pub id: Id<MarketKind>,
+    pub code: MarketCode,
+    pub name: MarketName,
+}
