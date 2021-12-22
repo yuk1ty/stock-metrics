@@ -1,2 +1,4 @@
+#[derive(Debug)]
 pub struct MarketName(pub String);
-pub struct MarketCode(pub u32);
+#[derive(Debug)]
+pub struct MarketCode(pub i32);

@@ -7,7 +7,7 @@ use crate::{
     context::validate::ValidatedRequest, model::market_kind::JsonCreateMarketKind, module::Modules,
 };
 
-#[tracing::instrument]
+#[tracing::instrument(skip(modules))]
 pub async fn create_market_kind(
     ValidatedRequest(source): ValidatedRequest<JsonCreateMarketKind>,
     Extension(modules): Extension<Arc<Modules>>,

@@ -7,7 +7,7 @@ use super::Id;
 
 pub mod value;
 
-#[derive(new)]
+#[derive(new, Debug)]
 pub struct MarketKind {
     pub id: Id<MarketKind>,
     pub code: MarketCode,

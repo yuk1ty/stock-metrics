@@ -34,8 +34,10 @@ impl Modules {
         repository
     }
 
-    pub fn stock_view_use_case(&self) -> StockViewUseCase<impl StockRepository> {
-        let usecase = StockViewUseCase::new(self.stock_repository());
+    pub fn stock_view_use_case(
+        &self,
+    ) -> StockViewUseCase<impl StockRepository, impl MarketKindRepository> {
+        let usecase = StockViewUseCase::new(self.stock_repository(), self.market_kind_repository());
         usecase
     }
 

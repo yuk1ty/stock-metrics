@@ -15,7 +15,7 @@ impl From<StockView> for JsonStockView {
             id: s.id,
             name: s.name,
             ticker_symbol: s.ticker_symbol,
-            market_kind: s.market_kind,
+            market_kind: s.market_kind_name,
         }
     }
 }

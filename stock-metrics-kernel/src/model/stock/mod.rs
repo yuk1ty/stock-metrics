@@ -7,7 +7,7 @@ use super::{market_kind::MarketKind, Id};
 
 pub mod ticker_symbol;
 
-#[derive(new)]
+#[derive(new, Debug)]
 pub struct Stock {
     pub id: Id<Stock>,
     pub name: String,
@@ -17,7 +17,7 @@ pub struct Stock {
     pub updated_at: DateTime<Local>,
 }
 
-#[derive(new)]
+#[derive(new, Debug)]
 pub struct NewStock {
     pub id: Id<Stock>,
     pub name: String,

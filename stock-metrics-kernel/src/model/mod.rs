@@ -7,7 +7,7 @@ pub mod market_data;
 pub mod market_kind;
 pub mod stock;
 
-#[derive(new)]
+#[derive(new, Debug, Clone, Copy)]
 pub struct Id<T> {
     pub value: Ulid,
     _marker: PhantomData<T>,

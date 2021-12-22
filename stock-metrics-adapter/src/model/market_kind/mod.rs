@@ -5,10 +5,10 @@ use stock_metrics_kernel::model::market_kind::{
     MarketKind, NewMarketKind,
 };
 
-#[derive(FromRow)]
+#[derive(FromRow, Debug)]
 pub struct MarketKindTable {
     pub id: String,
-    pub code: u32,
+    pub code: i32,
     pub name: String,
     pub created_at: DateTime<Local>,
     pub updated_at: DateTime<Local>,

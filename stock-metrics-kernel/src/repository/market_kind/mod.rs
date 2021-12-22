@@ -7,6 +7,6 @@ use crate::model::{
 
 #[async_trait]
 pub trait MarketKindRepository {
-    async fn find(&self, id: Id<MarketKind>) -> anyhow::Result<Option<MarketKind>>;
+    async fn find(&self, id: &Id<MarketKind>) -> anyhow::Result<Option<MarketKind>>;
     async fn insert(&self, source: NewMarketKind) -> anyhow::Result<Id<MarketKind>>;
 }
