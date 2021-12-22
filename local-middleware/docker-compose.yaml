@@ -22,6 +22,10 @@ services:
     ports:
       - 3306:3306
   dynamodb:
-    image: amazon/dynamodb-local
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb_server
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /data
+    volumes:
+      - ./data/dynamodb:/data
     ports:
       - 8000:8000

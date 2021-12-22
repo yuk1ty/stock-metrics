@@ -2,6 +2,7 @@ use std::marker::PhantomData;
 
 use crate::persistence::mysql::Db;
 
+pub mod health_check;
 pub mod market_kind;
 pub mod stock;
 

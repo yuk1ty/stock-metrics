@@ -33,7 +33,7 @@ impl<'a> MarketKindRepository for DatabaseRepositoryImpl<'a, MarketKind> {
         let pool = self.pool.0.clone();
         let market_kind_table: MarketKindTable = source.try_into()?;
         let _ = sqlx::query(
-			"insert into market_kind (id, code, name, created_at, updated_at) values (?, ?, ?, ?, ?)"
+		"insert into market_kind (id, code, name, created_at, updated_at) values (?, ?, ?, ?, ?)"
 		)
 		.bind(market_kind_table.id())
 		.bind(market_kind_table.code)
