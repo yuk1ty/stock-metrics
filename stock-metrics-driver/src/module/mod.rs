@@ -1,53 +1,72 @@
-use futures::executor::block_on;
+use std::sync::Arc;
+
 use stock_metrics_adapter::{
-    persistence::mysql::Db,
-    repository::{stock::StockRepositoryImpl, DatabaseRepositoryImpl},
+    modules::{RepositoriesModule, RepositoriesModuleExt},
+    persistence::{
+        dynamodb::{init_client, DynamoDB},
+        mysql::Db,
+    },
+    repository::health_check::HealthCheckRepository,
 };
 use stock_metrics_app::usecase::{
-    market_kind::MarketKindUseCase, stock::StockUseCase, stock_view::StockViewUseCase,
+    health_check::HealthCheckUseCase, market_kind::MarketKindUseCase, stock::StockUseCase,
+    stock_view::StockViewUseCase,
 };
-use stock_metrics_kernel::repository::{market_kind::MarketKindRepository, stock::StockRepository};
-use tokio::sync::OnceCell;
 
-// TODO module の作りがよくなくて、ここのフィールドにもたせるようにする必要がある？？
-#[derive(Debug)]
-pub struct Modules {}
+pub struct Modules {
+    health_check_use_case: HealthCheckUseCase,
+    stock_view_use_case: StockViewUseCase<RepositoriesModule>,
+    stock_use_case: StockUseCase<RepositoriesModule>,
+    market_kind_use_case: MarketKindUseCase<RepositoriesModule>,
+}
 
-static DB: OnceCell<Db> = OnceCell::const_new();
+pub trait ModulesExt {
+    type RepositoriesModule: RepositoriesModuleExt;
+
+    fn health_check_use_case(&self) -> &HealthCheckUseCase;
+    fn stock_view_use_case(&self) -> &StockViewUseCase<Self::RepositoriesModule>;
+    fn stock_use_case(&self) -> &StockUseCase<Self::RepositoriesModule>;
+    fn market_kind_use_case(&self) -> &MarketKindUseCase<Self::RepositoriesModule>;
+}
+
+impl ModulesExt for Modules {
+    type RepositoriesModule = RepositoriesModule;
+
+    fn health_check_use_case(&self) -> &HealthCheckUseCase {
+        &self.health_check_use_case
+    }
+
+    fn stock_view_use_case(&self) -> &StockViewUseCase<Self::RepositoriesModule> {
+        &self.stock_view_use_case
+    }
+
+    fn stock_use_case(&self) -> &StockUseCase<Self::RepositoriesModule> {
+        &self.stock_use_case
+    }
+
+    fn market_kind_use_case(&self) -> &MarketKindUseCase<Self::RepositoriesModule> {
+        &self.market_kind_use_case
+    }
+}
 
 impl Modules {
-    pub(super) fn db(&self) -> &'static Db {
-        // This can't capitalize on tokio's Runtime#block_on because
-        // we can't launch another runtime on the existing tokio's runtime.
-        // Alternatively we take advantage of futures crate's runtime.
-        let db = block_on(DB.get_or_init(Db::new));
-        db
-    }
+    pub async fn new() -> Modules {
+        let db = Db::new().await;
+        let client = init_client().await;
+        let dynamodb = DynamoDB::new(client);
 
-    fn stock_repository(&self) -> impl StockRepository {
-        let repository = StockRepositoryImpl::new(self.db());
-        repository
-    }
+        let repositories_module = Arc::new(RepositoriesModule::new(db));
 
-    fn market_kind_repository(&self) -> impl MarketKindRepository {
-        let repository = DatabaseRepositoryImpl::new(self.db());
-        repository
-    }
+        let health_check_use_case = HealthCheckUseCase::new(HealthCheckRepository::new(dynamodb));
+        let stock_view_use_case = StockViewUseCase::new(repositories_module.clone());
+        let stock_use_case = StockUseCase::new(repositories_module.clone());
+        let market_kind_use_case = MarketKindUseCase::new(repositories_module.clone());
 
-    pub fn stock_view_use_case(
-        &self,
-    ) -> StockViewUseCase<impl StockRepository, impl MarketKindRepository> {
-        let usecase = StockViewUseCase::new(self.stock_repository(), self.market_kind_repository());
-        usecase
-    }
-
-    pub fn stock_use_case(&self) -> StockUseCase<impl StockRepository> {
-        let usecase = StockUseCase::new(self.stock_repository());
-        usecase
-    }
-
-    pub fn market_kind_use_case(&self) -> MarketKindUseCase<impl MarketKindRepository> {
-        let usecase = MarketKindUseCase::new(self.market_kind_repository());
-        usecase
+        Self {
+            health_check_use_case,
+            stock_view_use_case,
+            stock_use_case,
+            market_kind_use_case,
+        }
     }
 }

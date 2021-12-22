@@ -4,7 +4,9 @@ use axum::{extract::Extension, http::StatusCode, response::IntoResponse};
 use tracing::error;
 
 use crate::{
-    context::validate::ValidatedRequest, model::market_kind::JsonCreateMarketKind, module::Modules,
+    context::validate::ValidatedRequest,
+    model::market_kind::JsonCreateMarketKind,
+    module::{Modules, ModulesExt},
 };
 
 #[tracing::instrument(skip(modules))]

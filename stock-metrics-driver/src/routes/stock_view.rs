@@ -11,7 +11,7 @@ use tracing::error;
 use crate::{
     context::validate::ValidatedRequest,
     model::{stock::JsonCreateStock, stock_view::JsonStockView},
-    module::Modules,
+    module::{Modules, ModulesExt},
 };
 
 #[tracing::instrument(skip(modules))]

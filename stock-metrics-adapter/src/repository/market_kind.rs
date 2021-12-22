@@ -12,7 +12,7 @@ use stock_metrics_kernel::{
 };
 
 #[async_trait]
-impl<'a> MarketKindRepository for DatabaseRepositoryImpl<'a, MarketKind> {
+impl MarketKindRepository for DatabaseRepositoryImpl<MarketKind> {
     async fn find(&self, id: &Id<MarketKind>) -> anyhow::Result<Option<MarketKind>> {
         let pool = self.pool.0.clone();
         let market_kind = query_as::<_, MarketKindTable>("select * from market_kind where id = ?")

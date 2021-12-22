@@ -8,20 +8,12 @@ use stock_metrics_kernel::{
     repository::stock::StockRepository,
 };
 
-use crate::{model::stock::StockTable, persistence::mysql::Db};
+use crate::model::stock::StockTable;
 
-pub struct StockRepositoryImpl<'a> {
-    pool: &'a Db,
-}
-
-impl<'a> StockRepositoryImpl<'a> {
-    pub fn new(pool: &'static Db) -> StockRepositoryImpl<'a> {
-        StockRepositoryImpl { pool }
-    }
-}
+use super::DatabaseRepositoryImpl;
 
 #[async_trait]
-impl<'a> StockRepository for StockRepositoryImpl<'a> {
+impl StockRepository for DatabaseRepositoryImpl<Stock> {
     async fn find(&self, id: Id<Stock>) -> anyhow::Result<Option<Stock>> {
         let pool = self.pool.0.clone();
         let stock_table = query_as::<_, StockTable>("select * from stock where id = ?")
@@ -63,14 +55,14 @@ mod test {
 
     use crate::persistence::mysql::Db;
 
-    use super::StockRepositoryImpl;
+    use super::DatabaseRepositoryImpl;
 
     // TODO later fix
     #[ignore]
     #[tokio::test]
     async fn test_insert_stock() {
         let db = Db::new().await;
-        let repository = StockRepositoryImpl { pool: &db };
+        let repository = DatabaseRepositoryImpl::new(db);
         let id = Ulid::new();
         let _ = repository
             .insert(NewStock::new(

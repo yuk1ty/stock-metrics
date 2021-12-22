@@ -1,12 +1,16 @@
+use std::sync::Arc;
+
 use crate::persistence::dynamodb::DynamoDB;
 
-pub struct HealthCheckRepository<'a> {
-    dynamo_db: &'a DynamoDB<'a>,
+pub struct HealthCheckRepository {
+    dynamo_db: Arc<DynamoDB>,
 }
 
-impl<'a> HealthCheckRepository<'a> {
-    pub fn new(dynamo_db: &'a DynamoDB<'a>) -> Self {
-        Self { dynamo_db }
+impl HealthCheckRepository {
+    pub fn new(dynamo_db: DynamoDB) -> Self {
+        Self {
+            dynamo_db: Arc::new(dynamo_db),
+        }
     }
 
     pub async fn check_dynamo_db(&self) -> anyhow::Result<()> {

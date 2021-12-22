@@ -1,10 +1,12 @@
+use std::sync::Arc;
+
 use aws_config::load_from_env;
 use aws_sdk_dynamodb::config::Builder;
 use aws_sdk_dynamodb::{Client, Endpoint};
 use http::Uri;
 
-pub struct DynamoDB<'a> {
-    client: &'a Client,
+pub struct DynamoDB {
+    client: Arc<Client>,
 }
 
 pub async fn init_client() -> Client {
@@ -18,9 +20,11 @@ pub async fn init_client() -> Client {
     dynamodb
 }
 
-impl<'a> DynamoDB<'a> {
-    pub fn new(client: &'a Client) -> DynamoDB<'a> {
-        DynamoDB { client: &client }
+impl DynamoDB {
+    pub fn new(client: Client) -> DynamoDB {
+        DynamoDB {
+            client: Arc::new(client),
+        }
     }
 
     pub async fn list_tables(&self) -> anyhow::Result<Option<Vec<String>>> {
@@ -37,7 +41,7 @@ mod test {
     #[ignore]
     async fn test_list_table() {
         let client = init_client().await;
-        let dynamodb = DynamoDB::new(&client);
+        let dynamodb = DynamoDB::new(client);
         let _ = dynamodb.list_tables().await;
     }
 }

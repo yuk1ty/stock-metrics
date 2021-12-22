@@ -6,13 +6,13 @@ pub mod health_check;
 pub mod market_kind;
 pub mod stock;
 
-pub struct DatabaseRepositoryImpl<'a, T> {
-    pool: &'a Db,
+pub struct DatabaseRepositoryImpl<T> {
+    pool: Db,
     _marker: PhantomData<T>,
 }
 
-impl<'a, T> DatabaseRepositoryImpl<'a, T> {
-    pub fn new(pool: &'static Db) -> DatabaseRepositoryImpl<'a, T> {
+impl<T> DatabaseRepositoryImpl<T> {
+    pub fn new(pool: Db) -> DatabaseRepositoryImpl<T> {
         Self {
             pool,
             _marker: PhantomData,

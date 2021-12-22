@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 use sqlx::{mysql::MySqlPoolOptions, MySql, Pool};
 
+#[derive(Clone)]
 pub struct Db(pub Arc<Pool<MySql>>);
 
 impl Db {

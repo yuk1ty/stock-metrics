@@ -1,12 +1,16 @@
+use std::sync::Arc;
+
 use stock_metrics_adapter::repository::health_check::HealthCheckRepository;
 
-pub struct HealthCheckUseCase<'a> {
-    repository: &'a HealthCheckRepository<'a>,
+pub struct HealthCheckUseCase {
+    repository: Arc<HealthCheckRepository>,
 }
 
-impl<'a> HealthCheckUseCase<'a> {
-    pub fn new(repository: &'a HealthCheckRepository<'a>) -> Self {
-        Self { repository }
+impl HealthCheckUseCase {
+    pub fn new(repository: HealthCheckRepository) -> Self {
+        Self {
+            repository: Arc::new(repository),
+        }
     }
 
     pub async fn check_dynamo_db(&self) -> anyhow::Result<()> {
