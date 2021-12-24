@@ -6,7 +6,7 @@ use aws_sdk_dynamodb::{Client, Endpoint};
 use http::Uri;
 
 pub struct DynamoDB {
-    client: Arc<Client>,
+    pub(crate) client: Arc<Client>,
 }
 
 pub async fn init_client() -> Client {

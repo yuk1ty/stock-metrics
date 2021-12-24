@@ -18,7 +18,7 @@ pub async fn create_market_kind(
         .market_kind_use_case()
         .register_market_kind(source.into())
         .await;
-    res.map(|id| (StatusCode::OK, id)).map_err(|err| {
+    res.map(|id| (StatusCode::CREATED, id)).map_err(|err| {
         error!("Unexpected error: {:?}", err);
         StatusCode::INTERNAL_SERVER_ERROR
     })

@@ -13,3 +13,5 @@ Cargo.lock
 **/*.rs.bk
 
 local-middleware/data/*
+
+.env

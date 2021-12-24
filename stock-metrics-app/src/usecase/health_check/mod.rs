@@ -13,7 +13,11 @@ impl HealthCheckUseCase {
         }
     }
 
-    pub async fn check_dynamo_db(&self) -> anyhow::Result<()> {
+    pub async fn diagnose_db_conn(&self) -> anyhow::Result<()> {
+        self.repository.check_rds_conn().await
+    }
+
+    pub async fn diagnose_dynamo_db_conn(&self) -> anyhow::Result<()> {
         self.repository.check_dynamo_db().await
     }
 }

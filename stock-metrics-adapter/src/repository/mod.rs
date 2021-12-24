@@ -1,21 +1,22 @@
 use std::marker::PhantomData;
 
-use crate::persistence::mysql::Db;
+use derive_new::new;
+
+use crate::persistence::{dynamodb::DynamoDB, mysql::Db};
 
 pub mod health_check;
+pub mod market_data;
 pub mod market_kind;
 pub mod stock;
 
+#[derive(new)]
 pub struct DatabaseRepositoryImpl<T> {
     pool: Db,
     _marker: PhantomData<T>,
 }
 
-impl<T> DatabaseRepositoryImpl<T> {
-    pub fn new(pool: Db) -> DatabaseRepositoryImpl<T> {
-        Self {
-            pool,
-            _marker: PhantomData,
-        }
-    }
+#[derive(new)]
+pub struct DynamoDBRepositoryImpl<T> {
+    dynamoDB: DynamoDB,
+    _market: PhantomData<T>,
 }

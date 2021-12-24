@@ -4,7 +4,7 @@ use std::sync::Arc;
 use sqlx::{mysql::MySqlPoolOptions, MySql, Pool};
 
 #[derive(Clone)]
-pub struct Db(pub Arc<Pool<MySql>>);
+pub struct Db(pub(crate) Arc<Pool<MySql>>);
 
 impl Db {
     pub async fn new() -> Db {

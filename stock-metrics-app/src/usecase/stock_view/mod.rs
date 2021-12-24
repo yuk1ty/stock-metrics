@@ -37,7 +37,6 @@ mod test {
     use std::sync::Arc;
 
     use stock_metrics_adapter::{modules::RepositoriesModule, persistence::mysql::Db};
-    use tokio::sync::OnceCell;
 
     use super::StockViewUseCase;
 

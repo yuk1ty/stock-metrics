@@ -34,13 +34,14 @@ pub async fn stock_view(
     }
 }
 
+// TODO move
 #[tracing::instrument(skip(modules))]
 pub async fn create_stock(
     ValidatedRequest(source): ValidatedRequest<JsonCreateStock>,
     Extension(modules): Extension<Arc<Modules>>,
 ) -> Result<impl IntoResponse, StatusCode> {
     let res = modules.stock_use_case().register_stock(source.into()).await;
-    res.map(|_| StatusCode::OK).map_err(|err| {
+    res.map(|_| StatusCode::CREATED).map_err(|err| {
         error!("Unexpected error: {:?}", err);
         StatusCode::INTERNAL_SERVER_ERROR
     })
