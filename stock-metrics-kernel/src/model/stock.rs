@@ -3,7 +3,9 @@ use derive_new::new;
 
 use self::ticker_symbol::TickerSymbol;
 
-use super::{market_kind::MarketKind, Id};
+use crate::model::market_kind::MarketKind;
+
+use super::Id;
 
 pub mod ticker_symbol;
 
