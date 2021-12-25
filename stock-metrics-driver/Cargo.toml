@@ -9,7 +9,7 @@ edition = "2021"
 stock-metrics-kernel = { path = "../stock-metrics-kernel" }
 stock-metrics-app = { path = "../stock-metrics-app" }
 stock-metrics-adapter = { path = "../stock-metrics-adapter" }
-axum = { version = "0.2.8", features = ["multipart"] }
+axum = { version = "0.4.3", features = ["multipart"] }
 tokio = { version = "1.12.0", features = ["full"] }
 serde = { version = "1.0.130", features = ["derive"] }
 once_cell = "1.8.0"

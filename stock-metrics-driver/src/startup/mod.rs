@@ -8,7 +8,7 @@ use crate::{
     },
 };
 use axum::{
-    handler::{get, post},
+    routing::{get, post},
     AddExtensionLayer, Router,
 };
 use dotenv::dotenv;

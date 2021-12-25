@@ -1,22 +1,17 @@
 use axum::{
     async_trait,
-    body::{Bytes, HttpBody},
     extract::{FromRequest, RequestParts},
-    http::{Response, StatusCode},
-    response::IntoResponse,
+    http::StatusCode,
+    response::{IntoResponse, Response},
     BoxError, Json,
 };
-use http_body::Full;
 use serde::de::DeserializeOwned;
 use validator::Validate;
 
 use super::{errors::AppError, validate::ValidatedRequest};
 
 impl IntoResponse for AppError {
-    type Body = Full<Bytes>;
-    type BodyError = <Self::Body as HttpBody>::Error;
-
-    fn into_response(self) -> Response<Self::Body> {
+    fn into_response(self) -> Response {
         match self {
             AppError::Validation(_) => {
                 let msg = format!("Input validation error: [{}]", self).replace('\n', ", ");
