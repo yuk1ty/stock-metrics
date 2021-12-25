@@ -5,9 +5,9 @@ use tracing::error;
 
 use crate::module::{Modules, ModulesExt};
 
-pub async fn hc() -> Result<impl IntoResponse, StatusCode> {
+pub async fn hc() -> impl IntoResponse {
     tracing::debug!("Access health check endpoint from user!");
-    Ok(StatusCode::NO_CONTENT)
+    StatusCode::NO_CONTENT
 }
 
 pub async fn hc_db(

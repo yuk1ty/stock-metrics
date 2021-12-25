@@ -27,7 +27,7 @@ macro_rules! formatted_date {
 impl CsvMarketData {
     pub fn to_market_data(&self, stock_id: impl Into<String>) -> anyhow::Result<MarketData> {
         let start_price = trail_comma!(self.start_price);
-        
+
         let end_price = trail_comma!(self.end_price);
         let low_price = trail_comma!(self.low_price);
         let high_price = trail_comma!(self.high_price);

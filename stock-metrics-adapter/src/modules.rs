@@ -19,7 +19,6 @@ pub trait RepositoriesModuleExt {
 
 impl RepositoriesModuleExt for RepositoriesModule {
     type StockRepo = DatabaseRepositoryImpl<Stock>;
-
     type MarketKindRepo = DatabaseRepositoryImpl<MarketKind>;
 
     fn stock_repository(&self) -> &Self::StockRepo {
