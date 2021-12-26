@@ -14,7 +14,7 @@ use super::DatabaseRepositoryImpl;
 
 #[async_trait]
 impl StockRepository for DatabaseRepositoryImpl<Stock> {
-    async fn find(&self, id: Id<Stock>) -> anyhow::Result<Option<Stock>> {
+    async fn find(&self, id: &Id<Stock>) -> anyhow::Result<Option<Stock>> {
         let pool = self.pool.0.clone();
         let stock_table = query_as::<_, StockTable>("select * from stock where id = ?")
             .bind(id.value.to_string())
@@ -73,7 +73,7 @@ mod test {
             ))
             .await
             .unwrap();
-        let found = repository.find(Id::new(id)).await.unwrap().unwrap();
+        let found = repository.find(&Id::new(id)).await.unwrap().unwrap();
         assert_eq!(found.id.value, id);
     }
 }

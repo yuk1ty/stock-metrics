@@ -4,7 +4,8 @@ use validator::Validate;
 
 #[derive(Deserialize, Debug, Validate)]
 pub struct JsonCreateMarketKind {
-    code: i32,
+    #[validate(length(min = 1, max = 36))]
+    code: String,
     #[validate(length(min = 1, max = 255))]
     name: String,
 }

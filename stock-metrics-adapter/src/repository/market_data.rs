@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use async_trait::async_trait;
-use aws_sdk_dynamodb::model::{AttributeValue, PutRequest, WriteRequest};
+use aws_sdk_dynamodb::model::{PutRequest, WriteRequest};
 use stock_metrics_kernel::{
     model::market_data::NewMarketData, repository::market_data::MarketDataRepository,
 };

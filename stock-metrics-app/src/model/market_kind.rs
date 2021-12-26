@@ -9,7 +9,7 @@ use stock_metrics_kernel::model::{
 
 #[derive(new)]
 pub struct CreateMarketKind {
-    pub code: i32,
+    pub code: String,
     pub name: String,
 }
 

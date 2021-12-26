@@ -9,7 +9,7 @@ create table stock (
 
 create table market_kind (
 	id varchar(36) primary key,
-	code integer not null,
+	code varchar(36) not null,
 	name varchar(255) not null,
 	created_at datetime not null,
 	updated_at datetime not null

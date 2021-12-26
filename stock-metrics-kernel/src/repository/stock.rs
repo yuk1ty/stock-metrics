@@ -7,6 +7,6 @@ use crate::model::{
 
 #[async_trait]
 pub trait StockRepository {
-    async fn find(&self, id: Id<Stock>) -> anyhow::Result<Option<Stock>>;
+    async fn find(&self, id: &Id<Stock>) -> anyhow::Result<Option<Stock>>;
     async fn insert(&self, source: NewStock) -> anyhow::Result<()>;
 }

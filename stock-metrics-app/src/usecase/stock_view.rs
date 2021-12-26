@@ -16,7 +16,7 @@ impl<R: RepositoriesModuleExt> StockViewUseCase<R> {
         let stock = self
             .repositories
             .stock_repository()
-            .find(id.try_into()?)
+            .find(&id.try_into()?)
             .await?;
         match stock {
             Some(stock) => {

@@ -8,7 +8,7 @@ use stock_metrics_kernel::model::market_kind::{
 #[derive(FromRow, Debug)]
 pub struct MarketKindTable {
     pub id: String,
-    pub code: i32,
+    pub code: String,
     pub name: String,
     pub created_at: DateTime<Local>,
     pub updated_at: DateTime<Local>,

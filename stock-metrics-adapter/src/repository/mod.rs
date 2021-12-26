@@ -18,5 +18,5 @@ pub struct DatabaseRepositoryImpl<T> {
 #[derive(new)]
 pub struct DynamoDBRepositoryImpl<T> {
     dynamoDB: DynamoDB,
-    _market: PhantomData<T>,
+    _marker: PhantomData<T>,
 }
