@@ -1,6 +1,10 @@
 use std::sync::Arc;
 
-use axum::{extract::Extension, http::StatusCode, response::IntoResponse};
+use axum::{
+    extract::{Extension, Path},
+    http::StatusCode,
+    response::IntoResponse,
+};
 use tracing::error;
 
 use crate::{
@@ -22,4 +26,20 @@ pub async fn create_market_kind(
         error!("Unexpected error: {:?}", err);
         StatusCode::INTERNAL_SERVER_ERROR
     })
+}
+
+#[tracing::instrument(skip(modules))]
+pub async fn delete_market_kind(
+    Path(id): Path<String>,
+    Extension(modules): Extension<Arc<Modules>>,
+) -> Result<impl IntoResponse, StatusCode> {
+    modules
+        .market_kind_use_case()
+        .delete_market_kind(id)
+        .await
+        .map(|_| StatusCode::NO_CONTENT)
+        .map_err(|err| {
+            error!("Unexpected error: {:?}", err);
+            StatusCode::INTERNAL_SERVER_ERROR
+        })
 }

@@ -3,12 +3,12 @@ use crate::{
     routes::{
         health::{hc, hc_db, hc_dynamo},
         market_data::upload_market_data,
-        market_kind::create_market_kind,
+        market_kind::{create_market_kind, delete_market_kind},
         stock_view::{create_stock, stock_view},
     },
 };
 use axum::{
-    routing::{get, post},
+    routing::{delete, get, post},
     AddExtensionLayer, Router,
 };
 use dotenv::dotenv;
@@ -22,7 +22,9 @@ pub async fn startup(modules: Arc<Modules>) {
     let stocks_router = Router::new()
         .route("/", post(create_stock))
         .route("/:id", get(stock_view));
-    let market_kind_router = Router::new().route("/", post(create_market_kind));
+    let market_kind_router = Router::new()
+        .route("/", post(create_market_kind))
+        .route("/:id", delete(delete_market_kind));
     let market_data_router = Router::new().route("/:stock_id", post(upload_market_data));
 
     let app = Router::new()

@@ -29,4 +29,11 @@ impl<R: RepositoriesModuleExt> MarketKindUseCase<R> {
             .await
             .map(|id| id.value.to_string())
     }
+
+    pub async fn delete_market_kind(&self, id: String) -> anyhow::Result<()> {
+        self.repositories
+            .market_kind_repository()
+            .delete(&id.try_into()?)
+            .await
+    }
 }

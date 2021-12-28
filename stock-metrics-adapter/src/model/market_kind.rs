@@ -1,4 +1,5 @@
-use chrono::{DateTime, Local};
+use crate::local_datetime;
+use chrono::{Local, NaiveDateTime, TimeZone};
 use sqlx::FromRow;
 use stock_metrics_kernel::model::market_kind::{
     value::{MarketCode, MarketName},
@@ -10,8 +11,8 @@ pub struct MarketKindTable {
     pub id: String,
     pub code: String,
     pub name: String,
-    pub created_at: DateTime<Local>,
-    pub updated_at: DateTime<Local>,
+    pub created_at: NaiveDateTime,
+    pub updated_at: NaiveDateTime,
 }
 
 impl MarketKindTable {
@@ -27,8 +28,8 @@ impl TryFrom<MarketKindTable> for MarketKind {
             mt.id.try_into()?,
             MarketCode(mt.code),
             MarketName(mt.name),
-            mt.created_at,
-            mt.updated_at,
+            local_datetime!(mt.created_at),
+            local_datetime!(mt.updated_at),
         ))
     }
 }
@@ -40,8 +41,8 @@ impl TryFrom<NewMarketKind> for MarketKindTable {
             id: mt.id.value.to_string(),
             code: mt.code.0,
             name: mt.name.0,
-            created_at: Local::now(),
-            updated_at: Local::now(),
+            created_at: Local::now().naive_local(),
+            updated_at: Local::now().naive_local(),
         })
     }
 }

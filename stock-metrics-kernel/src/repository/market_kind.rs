@@ -9,4 +9,5 @@ use crate::model::{
 pub trait MarketKindRepository {
     async fn find(&self, id: &Id<MarketKind>) -> anyhow::Result<Option<MarketKind>>;
     async fn insert(&self, source: NewMarketKind) -> anyhow::Result<Id<MarketKind>>;
+    async fn delete(&self, id: &Id<MarketKind>) -> anyhow::Result<()>;
 }
