@@ -1,0 +1,94 @@
+name: Rust
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+env:
+  CARGO_TERM_COLOR: always
+  DATABASE_URL: mysql://root:password@localhost/test_stock
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install rust-toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          components: rustfmt, clippy
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-${{ github.job }}-
+            ${{ runner.os }}-cargo-
+      - name: cargo fmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+      # - name: cargo clippy
+      #   uses: actions-rs/cargo@v1
+      #   env:
+      #     RUSTFLAGS: -D warnings
+      #   with:
+      #     command: clippy
+      #     args: --workspace --all-targets --all-features
+
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test_stock
+          MYSQL_USER: docker
+          MYSQL_PASSWORD: docker
+          TZ: Asia/Tokyo
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install rust-toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+
+      - name: Migrate database
+        run: |
+          cargo install sqlx-cli
+          sqlx migrate run
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ github.job }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-${{ github.job }}-
+            ${{ runner.os }}-cargo-
+      - name: Build (denying warnings)
+        run: cargo build --all-targets --all-features --verbose
+
+      - name: Run tests
+        run: cargo test --verbose
