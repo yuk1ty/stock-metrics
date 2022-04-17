@@ -63,6 +63,7 @@ jobs:
           MYSQL_USER: docker
           MYSQL_PASSWORD: docker
           TZ: Asia/Tokyo
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
       - uses: actions/checkout@v2
@@ -76,6 +77,14 @@ jobs:
         name: Install sqlx-cli
         with:
           crate: sqlx-cli
+
+      - name: Verify MySQL connection
+        env:
+          PORT: ${{ job.services.mysql.ports[3306] }}
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+            sleep 1
+          done
 
       - name: Migrate database
         run: sqlx migrate run
