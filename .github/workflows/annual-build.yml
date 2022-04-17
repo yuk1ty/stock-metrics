@@ -74,7 +74,7 @@ jobs:
 
       - name: Migrate database
         run: |
-          cargo install sqlx-cli
+          cargo install sqlx-cli --no-default-features --features rustls,mysql
           sqlx migrate run
 
       - uses: actions/cache@v2
