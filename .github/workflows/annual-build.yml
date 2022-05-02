@@ -102,8 +102,10 @@ jobs:
       - name: Build (denying warnings)
         run: cargo build --all-targets --all-features --verbose
 
-      - name: Run tests
-        run: cargo test --verbose
+      - uses: taiki-e/install-action@nextest
 
-      - name: test Run
-        run: echo "End!"
+      - name: Run tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: nextest
+          args: run --all-features --all-targets
