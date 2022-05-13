@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use async_trait::async_trait;
-use aws_sdk_dynamodb::model::{PutRequest, WriteRequest};
+use aws_sdk_dynamodb::model::{AttributeValue, PutRequest, WriteRequest};
 use stock_metrics_kernel::{
     model::market_data::NewMarketData, repository::market_data::MarketDataRepository,
 };
@@ -15,7 +15,37 @@ impl MarketDataRepository for DynamoDBRepositoryImpl<NewMarketData> {
             .into_iter()
             .map(|m| {
                 WriteRequest::builder()
-                    .set_put_request(Some(PutRequest::builder().build()))
+                    .set_put_request(Some(
+                        PutRequest::builder()
+                            .set_item(Some(
+                                [
+                                    ("as_of".to_string(), AttributeValue::S(m.as_of.to_string())),
+                                    (
+                                        "stock_id".to_string(),
+                                        AttributeValue::S(m.stock_id.value.to_string()),
+                                    ),
+                                    (
+                                        "start_price".to_string(),
+                                        AttributeValue::N(m.start_price.to_string()),
+                                    ),
+                                    (
+                                        "end_price".to_string(),
+                                        AttributeValue::N(m.end_price.to_string()),
+                                    ),
+                                    (
+                                        "high_price".to_string(),
+                                        AttributeValue::N(m.high_price.to_string()),
+                                    ),
+                                    (
+                                        "low_price".to_string(),
+                                        AttributeValue::N(m.low_price.to_string()),
+                                    ),
+                                ]
+                                .into_iter()
+                                .collect(),
+                            ))
+                            .build(),
+                    ))
                     .build()
             })
             .collect();

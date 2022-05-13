@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use stock_metrics_app::model::market_data::MarketData;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct CsvMarketData {
     as_of: String,
     end_price: String,

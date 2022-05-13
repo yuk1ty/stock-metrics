@@ -1,13 +1,15 @@
-use chrono::{DateTime, Local};
+#[allow(unused)]
+use chrono::{Date, Local};
 use derive_new::new;
 
 use super::{stock::Stock, Id};
 
 #[derive(new)]
 pub struct NewMarketData {
-    stock_id: Id<Stock>,
-    as_of: DateTime<Local>,
-    start_price: f32,
-    end_price: f32,
-    high_price: f32,
+    pub stock_id: Id<Stock>,
+    pub as_of: Date<Local>,
+    pub start_price: f32,
+    pub end_price: f32,
+    pub high_price: f32,
+    pub low_price: f32,
 }

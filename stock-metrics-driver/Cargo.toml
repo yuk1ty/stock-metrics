@@ -10,9 +10,8 @@ stock-metrics-kernel = { path = "../stock-metrics-kernel" }
 stock-metrics-app = { path = "../stock-metrics-app" }
 stock-metrics-adapter = { path = "../stock-metrics-adapter" }
 axum = { version = "0.4.3", features = ["multipart"] }
-tokio = { version = "1.12.0", features = ["full"] }
+tokio = { version = "1.12.0", features = ["rt", "macros", "test-util"] }
 serde = { version = "1.0.130", features = ["derive"] }
-once_cell = "1.8.0"
 derive-new = "0.5.9"
 anyhow = "1.0.44"
 futures = { version = "0.3.17", features = ["executor"] }
